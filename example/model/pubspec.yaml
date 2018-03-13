@@ -1,0 +1,16 @@
+name: model
+description: A Test For wills_gen
+version: 0.0.1
+
+environment:
+  sdk: '>=1.20.1 <2.0.0'
+
+dependencies:
+  flutter_wills:
+    path: ../../../flutter_wills
+
+dev_dependencies:
+  build_runner: 0.6.0
+  source_gen: ^0.7.0
+  flutter_wills_gen:
+    path: ../../../flutter_wills_gen
