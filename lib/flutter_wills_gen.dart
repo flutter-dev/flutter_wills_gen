@@ -77,7 +77,6 @@ class WillsGenerator extends GeneratorForAnnotation<Wills> {
     $type get $name { 
       \$observe('$name'); 
       ${val != null ? '_$name =  _$name ?? $val;' : ''}
-      \$checkType(_$name);
       return _$name; 
     }
     set $name($type $name) {
