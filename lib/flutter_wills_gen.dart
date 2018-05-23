@@ -37,10 +37,15 @@ class WillsGenerator extends GeneratorForAnnotation<Wills> {
         constructorParams.writeln('{');
       }
 
-      constructorParams.writeln(fieldVal != null ? '${fieldType} ${fieldName} : $fieldVal,' : '${fieldType} ${fieldName},');
-      assignParams.writeln('.._${fieldName} = ${fieldName}');
+      //constructorParams.writeln(fieldVal != null ? '${fieldType} ${fieldName} : $fieldVal,' : '${fieldType} ${fieldName},');
+      constructorParams.writeln('${fieldType} ${fieldName},');
+      if(fieldVal != null) {
+        assignParams.writeln('.._${fieldName} = ${fieldName} ?? ${fieldVal}');
+      } else {
+        assignParams.writeln('.._${fieldName} = ${fieldName}');
+      }
       body.writeln('${fieldType} _${fieldName};');
-      body.writeln(_implMethod(fieldType, fieldName, fieldVal));
+      body.writeln(_implMethod(fieldType, fieldName));
     }
 
     var supertype = el.supertype;
@@ -50,8 +55,13 @@ class WillsGenerator extends GeneratorForAnnotation<Wills> {
         fieldType = field.type.toString();
         fieldName = field.name;
         fieldVal = _defaultValue(fieldType);
-        constructorParams.writeln(fieldVal != null ? '${fieldType} ${fieldName} : $fieldVal,' : '${fieldType} ${fieldName},');
-        assignParams.writeln('..${fieldName} = ${fieldName}');
+        //constructorParams.writeln(fieldVal != null ? '${fieldType} ${fieldName} : $fieldVal,' : '${fieldType} ${fieldName},');
+        constructorParams.writeln('${fieldType} ${fieldName},');
+        if(fieldVal != null) {
+          assignParams.writeln('.._${fieldName} = ${fieldName} ?? ${fieldVal}');
+        } else {
+          assignParams.writeln('.._${fieldName} = ${fieldName}');
+        }
       }
       supertype = supertype.element.supertype;
     }
@@ -72,15 +82,14 @@ class WillsGenerator extends GeneratorForAnnotation<Wills> {
       ''';
   }
 
-  String _implMethod(String type, String name, String val) {
+  String _implMethod(String type, String name) {
     return '''
-    $type get $name { 
+    $type get $name {
       \$observe('$name'); 
-      ${val != null ? '_$name =  _$name ?? $val;' : ''}
       return _$name; 
     }
     set $name($type $name) {
-      if ($name != null && $name == _$name) return;
+      if ($name == _$name) return;
       _$name = $name;
       \$notify('$name');
     }
